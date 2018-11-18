@@ -1,0 +1,80 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: starter
+  jackson:
+    serialization.indent_output: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:file:./build/h2db/db/starter;DB_CLOSE_DELAY=-1
+    username: starter
+    password:
+    hikari:
+      auto-commit: false
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    database: H2
+    show-sql: true
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+  h2:
+    console:
+      enabled: true
+  liquibase:
+    change-log: classpath:db/changelog/master.xml
+  thymeleaf:
+    cache: false
+  messages:
+    basename: i18n/messages
+    fallback-to-system-locale: true
+    use-code-as-default-message: false
+
+app:
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    exposed-headers: "Authorization,Link,X-Total-Count"
+    allow-credentials: true
+    max-age: 1800
+  security:
+    authentication:
+      jwt:
+        # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
+        base64-secret: ODA4ZWM2MTU2ZjE4MjlmMTY0MjQ0YWU0YzdlMTUyODU1YmJkOWQwY2ExOTIxYmY1N2ZjZmFjM2E1OGFjMzRjYjI2YzQzNzEzNzZmNzgzN2NjNmFiMGRmMDBiMTMwZjllMjM5NTc0NzA0YmY0MTk4YmJkNDMyOWE4NTMwZTMzZDY=
+        # Token is valid 24 hours
+        token-validity-in-seconds: 86400
+        # Token is valid 30 days
+        token-validity-in-seconds-for-remember-me: 2592000
+  system:
+    email-activation: false
+    email-from: starter@pnowy.com
+    base-url: http://localhost:3000
+
+# the health indicator for email should be disabled when email-activation is disabled
+management:
+  health:
+    mail:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.github.pnowy.starter: DEBUG

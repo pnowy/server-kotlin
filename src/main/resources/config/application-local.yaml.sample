@@ -1,0 +1,23 @@
+spring:
+  mail:
+    host: localhost
+    port: 587
+    username: -= put value here =-
+    password: -= put value here =-
+
+app:
+  security:
+    authentication:
+      social: # social logging with authorization code flow
+        google:
+          clientId: -= put value here =-
+          clientSecret: -= put value here =-
+        facebook:
+          clientId: -= put value here =-
+          clientSecret: -= put value here =-
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.github.pnowy.starter: DEBUG

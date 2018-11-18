@@ -1,0 +1,11 @@
+version: '2'
+services:
+    sc-starter-postgresql:
+        image: postgres:10.4
+        volumes:
+             - /_volumes/sc-starter/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER: softwareclazz
+            - POSTGRES_PASSWORD: softwareclazz
+        ports:
+            - 5432:5432

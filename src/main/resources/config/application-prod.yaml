@@ -1,0 +1,58 @@
+spring:
+  jpa:
+    show-sql: false
+  h2:
+    console:
+      enabled: false
+  mail:
+    host: localhost
+    port: 587
+    username: '-= put username here =-'
+    password: '-= put password here =-'
+  thymeleaf:
+    cache: true
+
+app:
+  cors:
+    allowed-origins: "-= put your client domain here =-"
+    allowed-methods: "HEAD,OPTIONS,GET,POST,PUT,DELETE,PATCH"
+    allowed-headers: "-= put allowed headers here =-"
+    exposed-headers: "Authorization,Link,X-Total-Count"
+    allow-credentials: true
+    max-age: 1800
+  security:
+    authentication:
+      jwt:
+        # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
+        base64-secret: '-= encode your secret and put here =-'
+        # Token is valid 24 hours
+        token-validity-in-seconds: 86400
+        # Token is valid 30 days
+        token-validity-in-seconds-for-remember-me: 2592000
+      social: # social logging with authorization code flow
+        google:
+          clientId: "-= put your client id here =-"
+          clientSecret: "-= put your client secret here =-"
+        facebook:
+          clientId: "-= put your client id here =-"
+          clientSecret: "-= put your client secret here =-"
+  system:
+    email-activation: true
+    email-from: starter@pnowy.com
+    base-url: http://localhost:3000
+
+# the health indicator for email should be disabled when email-activation is disabled
+management:
+  health:
+    mail:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.github.pnowy.starter: INFO
