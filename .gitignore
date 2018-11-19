@@ -26,3 +26,5 @@
 /.nb-gradle/
 
 /src/main/resources/config/application-local.yaml
+
+docker/data/
