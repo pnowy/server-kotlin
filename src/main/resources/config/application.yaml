@@ -40,6 +40,11 @@ spring:
     basename: i18n/messages
     fallback-to-system-locale: true
     use-code-as-default-message: false
+  mail:
+    host: localhost
+    port: 587
+    username:
+    password:
 
 app:
   cors:
