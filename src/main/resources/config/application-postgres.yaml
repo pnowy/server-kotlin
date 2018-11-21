@@ -1,11 +1,8 @@
 spring:
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/starter
     username: starter
     password: starter
-    hikari:
-      auto-commit: false
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql

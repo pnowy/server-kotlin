@@ -1,0 +1,16 @@
+version: '2'
+services:
+  server-kotlin:
+    image: pnowy/server-kotlin:1.0.0
+    environment:
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://starter-postgresql:5432/starter
+    - SPRING_DATASOURCE_USERNAME=starter
+    - SPRING_DATASOURCE_PASSWORD=starter
+    - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+    - SPRING_JPA_DATABASE=postgresql
+    ports:
+      - 8080:8080
+  starter-postgresql:
+    extends:
+      service: starter-postgresql
+      file: postgres.yml
