@@ -1,0 +1,128 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgresql-volumeclaim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - image: "postgres:10.4"
+        name: postgres
+        env:
+        - name: POSTGRES_PASSWORD
+          value: starter
+        - name: "POSTGRES_USER"
+          value: starter
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: postgresql-volumeclaim
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgresql-volumeclaim
+        persistentVolumeClaim:
+          claimName: postgresql-volumeclaim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5432
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-kotlin
+  labels:
+    app: server-kotlin
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: server-kotlin
+  template:
+    metadata:
+      labels:
+        app: server-kotlin
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+      - image: "pnowy/server-kotlin:latest"
+        imagePullPolicy: Always
+        name: server-kotlin
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 5
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://postgres:5432/starter
+        - name: SPRING_DATASOURCE_USERNAME
+          value: starter
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: starter
+        - name: SPRING_JPA_DATABASE_PLATFORM
+          value: org.hibernate.dialect.PostgreSQLDialect
+        - name: SPRING_JPA_DATABASE
+          value: postgresql
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: 1500Mi
+          limits:
+            memory: 2096Mi
+      imagePullSecrets:
+      - name: gitlab-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: server-kotlin
+  name: server-kotlin
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: server-kotlin
