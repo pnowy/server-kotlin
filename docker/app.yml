@@ -14,3 +14,7 @@ services:
     extends:
       service: starter-postgresql
       file: postgres.yml
+  client-vue:
+    image: pnowy/client-vue:1.0.0
+    ports:
+      - 80:80

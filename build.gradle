@@ -79,7 +79,8 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
-// ./gradlew jibDockerBuild
+// ./gradlew jibDockerBuild -> local context
+// ./gradlew jib -> local && push to dockerhub
 jib {
     to {
         image = "pnowy/server-kotlin"
